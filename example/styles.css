@@ -70,38 +70,4 @@ main {
   font-size: 0.9rem;
 }
 
-/* Space out multiple instances of a component within one example. */
-.example data-grid + data-grid {
-  margin-top: 1rem;
-}
 
-/* -------------------------------------------------------------------------
- * Component overrides
- *
- * The component is themeable in three ways, from broadest to most specific.
- * Uncomment and adjust when you need to customise it:
- *
- * 1. Global tokens  — set on :root, affects every instance.
- * 2. Per-instance   — set on the element, affects one instance.
- * 3. Structural     — style internal elements via ::part().
- * ---------------------------------------------------------------------- */
-
-/* 1. Global: every <data-grid> uses this border colour.
-:root {
-  --data-grid-border-color: #6366f1;
-}
-*/
-
-/* 2. Per-instance: this one overrides the global value.
-data-grid.featured {
-  --data-grid-border-color: #ec4899;
-  --data-grid-border-style: solid;
-}
-*/
-
-/* 3. Structural: reach an internal element exposed with part="placeholder".
-data-grid.compact::part(placeholder) {
-  padding: 0.25rem;
-  text-align: left;
-}
-*/

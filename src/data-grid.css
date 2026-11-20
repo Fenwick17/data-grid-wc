@@ -15,6 +15,8 @@
  *   data-grid::part(header-cell)
  *   data-grid::part(row)
  *   data-grid::part(cell)
+ *   data-grid::part(cell-button)
+ *   data-grid::part(input)
  */
 
 :host {

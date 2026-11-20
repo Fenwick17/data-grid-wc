@@ -131,7 +131,6 @@ export class DataGrid extends LitElement {
           const isActive =
             this.activeCell.row === gridRow &&
             this.activeCell.col === colIndex;
-          const isEditing = this.editing && isActive && column.editable;
           return html`
             <div
               class="cell"
@@ -141,26 +140,7 @@ export class DataGrid extends LitElement {
               data-row=${gridRow}
               data-col=${colIndex}
             >
-              ${isEditing
-                ? html`<span class="cell-placeholder" aria-hidden="true"
-                      >${person[column.key]}</span
-                    >
-                    <input
-                      class="cell-input"
-                      part="input"
-                      aria-label=${column.label}
-                      .value=${this.editValue}
-                      @input=${this.handleInput}
-                      @blur=${this.handleBlur}
-                    />`
-                : column.editable
-                  ? html`<button
-                      class="cell-button"
-                      part="cell-button"
-                      type="button"
-                      tabindex="-1"
-                    >${person[column.key]}</button>`
-                  : person[column.key]}
+              ${this.renderCellContent(person, column, isActive)}
             </div>
           `;
         })}
@@ -168,12 +148,45 @@ export class DataGrid extends LitElement {
     `;
   }
 
-  private handlePointerDown = () => {
+  private renderCellContent(
+    person: Person,
+    column: Column,
+    isActive: boolean
+  ) {
+    if (this.editing && isActive && column.editable) {
+      return html`
+        <span class="cell-placeholder" aria-hidden="true"
+          >${person[column.key]}</span
+        >
+        <input
+          class="cell-input"
+          part="input"
+          aria-label=${column.label}
+          .value=${this.editValue}
+          @input=${this.handleInput}
+          @blur=${this.handleBlur}
+        />
+      `;
+    }
+
+    if (column.editable) {
+      return html`<button
+        class="cell-button"
+        part="cell-button"
+        type="button"
+        tabindex="-1"
+      >${person[column.key]}</button>`;
+    }
+
+    return person[column.key];
+  }
+
+  private handlePointerDown() {
     // In a shadow root, `document.activeElement` is the host element when a
     // shadow descendant has focus. This is more reliable than `:focus-within`
     // across browsers and test environments.
     this.hadFocusBeforePointer = document.activeElement === this;
-  };
+  }
 
   private handleClick(event: MouseEvent) {
     const target = event.target as HTMLElement;

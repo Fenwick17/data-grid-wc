@@ -46,11 +46,13 @@ npm run build
 
 | Script | Description |
 | --- | --- |
+| `npm run clean` | Remove `dist/` |
 | `npm run build` | Clean, emit type declarations, and bundle |
 | `npm run build:types` | Emit `.d.ts` declarations only |
 | `npm run build:watch` | Rebuild bundles on change |
 | `npm run typecheck` | Type-check without emitting |
-| `npm start` | Run the example app with hot reload |
+| `npm start` | Run the example app locally |
+| `npm run start:host` | Run the example app on the local network |
 | `npm run start:build` | Build the example app to `dist-example/` |
 | `npm run start:preview` | Preview the built example app |
 
@@ -103,9 +105,9 @@ Importing `theme.css` is optional — components ship fallbacks — but it gives
 When tokens aren't enough, style internal elements directly through exposed parts:
 
 ```css
-data-grid::part(placeholder) {
-  padding: 0.25rem;
-  text-align: left;
+data-grid::part(header-cell) {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 ```
 
@@ -125,7 +127,7 @@ data-grid::part(placeholder) {
 | `--data-grid-focus-color` | `#6366f1` | Keyboard focus ring color |
 | `--data-grid-cell-padding` | `0.75rem 1rem` | Cell padding |
 
-Exposed parts: `grid`, `header`, `header-cell`, `row`, `cell`.
+Exposed parts: `grid`, `header`, `header-cell`, `row`, `cell`, `cell-button`, `input`.
 
 ## Examples
 
