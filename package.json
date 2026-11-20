@@ -1,0 +1,44 @@
+{
+  "name": "web-components-library",
+  "version": "1.0.0",
+  "description": "A cross-framework web components library built with Lit and TypeScript.",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./theme.css": "./dist/theme.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "npm run clean && npm run build:types && rollup -c",
+    "build:types": "tsc -p tsconfig.build.json --emitDeclarationOnly --outDir dist",
+    "build:watch": "rollup -c -w",
+    "typecheck": "tsc --noEmit",
+    "start": "vite",
+    "start:host": "vite --host",
+    "start:build": "vite build",
+    "start:preview": "vite preview"
+  },
+  "dependencies": {
+    "lit": "^3.1.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^11.1.6",
+    "rimraf": "^5.0.5",
+    "rollup": "^4.0.0",
+    "tslib": "^2.6.2",
+    "typescript": "^5.4.0",
+    "vite": "^5.4.0"
+  }
+}

@@ -1,0 +1,107 @@
+:root {
+  color-scheme: light dark;
+  --page-bg: #f7f7f8;
+  --page-fg: #1a1a1a;
+  --card-bg: #ffffff;
+  --border: #e2e2e5;
+  --muted: #6b7280;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page-bg: #16161a;
+    --page-fg: #f2f2f3;
+    --card-bg: #1f1f24;
+    --border: #2e2e34;
+    --muted: #9ca3af;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--page-bg);
+  color: var(--page-fg);
+  line-height: 1.5;
+}
+
+header {
+  padding: 2rem 1.5rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+header h1 {
+  margin: 0 0 0.25rem;
+  font-size: 1.5rem;
+}
+
+header p {
+  margin: 0;
+  color: var(--muted);
+}
+
+main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.example {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.25rem;
+}
+
+.example > h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1.1rem;
+}
+
+.example > p {
+  margin: 0 0 1rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* Space out multiple instances of a component within one example. */
+.example data-grid + data-grid {
+  margin-top: 1rem;
+}
+
+/* -------------------------------------------------------------------------
+ * Component overrides
+ *
+ * The component is themeable in three ways, from broadest to most specific.
+ * Uncomment and adjust when you need to customise it:
+ *
+ * 1. Global tokens  — set on :root, affects every instance.
+ * 2. Per-instance   — set on the element, affects one instance.
+ * 3. Structural     — style internal elements via ::part().
+ * ---------------------------------------------------------------------- */
+
+/* 1. Global: every <data-grid> uses this border colour.
+:root {
+  --data-grid-border-color: #6366f1;
+}
+*/
+
+/* 2. Per-instance: this one overrides the global value.
+data-grid.featured {
+  --data-grid-border-color: #ec4899;
+  --data-grid-border-style: solid;
+}
+*/
+
+/* 3. Structural: reach an internal element exposed with part="placeholder".
+data-grid.compact::part(placeholder) {
+  padding: 0.25rem;
+  text-align: left;
+}
+*/

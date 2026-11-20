@@ -1,0 +1,128 @@
+/*
+ * Data Grid styles.
+ *
+ * These styles are scoped to the component's shadow root. They consume the
+ * design tokens defined in `src/styles/tokens.css`.
+ *
+ * Why `var()` fallbacks?
+ * A `:host` token declaration would beat inherited values and break global
+ * theming. Referencing tokens with fallbacks lets consumers override on
+ * `:root` or on the element itself.
+ *
+ * Structural overrides are exposed via `::part()`:
+ *   data-grid::part(grid)
+ *   data-grid::part(header)
+ *   data-grid::part(header-cell)
+ *   data-grid::part(row)
+ *   data-grid::part(cell)
+ */
+
+:host {
+  display: block;
+  font-family: var(
+    --data-grid-font-family,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    sans-serif
+  );
+  color: var(--data-grid-color, inherit);
+}
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  border: var(--data-grid-border-width, 1px)
+    var(--data-grid-border-style, solid)
+    var(--data-grid-border-color, #d0d0d5);
+  border-radius: var(--data-grid-border-radius, 8px);
+  overflow: hidden;
+}
+
+.row {
+  display: flex;
+}
+
+.cell {
+  position: relative;
+  box-sizing: border-box;
+  flex: 1 1 0;
+  min-width: 0;
+  padding: var(--data-grid-cell-padding, 0.75rem 1rem);
+  text-align: left;
+}
+
+/* Horizontal separators. */
+.row + .row .cell {
+  border-top: var(--data-grid-border-width, 1px)
+    var(--data-grid-border-style, solid)
+    var(--data-grid-border-color, #d0d0d5);
+}
+
+/* Vertical separators. */
+.cell + .cell {
+  border-left: var(--data-grid-border-width, 1px)
+    var(--data-grid-border-style, solid)
+    var(--data-grid-border-color, #d0d0d5);
+}
+
+.row--header .cell {
+  font-weight: 600;
+  background: var(--data-grid-header-background, rgba(127, 127, 127, 0.08));
+  color: var(--data-grid-header-color, inherit);
+}
+
+/* Keyboard focus ring on the active cell. */
+.cell:focus {
+  outline: 2px solid var(--data-grid-focus-color, #6366f1);
+  outline-offset: -2px;
+}
+
+/*
+ * Editable cells render a transparent button that fills the cell's content
+ * box. It is visually indistinguishable from plain cell text, but gives
+ * assistive tech a native, actionable element to activate.
+ */
+.cell-button {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: text;
+}
+
+.cell-button:focus {
+  outline: none;
+}
+
+/*
+ * Invisible placeholder keeps the cell's height stable while editing. The
+ * absolutely positioned input sits on top of it.
+ */
+.cell-placeholder {
+  display: block;
+  visibility: hidden;
+}
+
+.cell-input {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  width: 100%;
+  padding: var(--data-grid-cell-padding, 0.75rem 1rem);
+  border: none;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  outline: none;
+}
+
+.cell-input:focus {
+  outline: 2px solid var(--data-grid-focus-color, #6366f1);
+  outline-offset: -2px;
+}

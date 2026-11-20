@@ -1,0 +1,37 @@
+/*
+ * Design tokens — the "base CSS" for the library.
+ *
+ * This file defines every tunable value as a CSS custom property on `:root`.
+ * Because custom properties inherit, consumers can override them globally
+ * (on `:root`) or per instance (on the element).
+ *
+ * Components also ship fallback values, so they render without this file.
+ * Importing it is only needed to theme globally or to have a single,
+ * documented place to read and change the defaults.
+ *
+ * Naming: tokens are prefixed with the component name (`--data-grid-*`) to
+ * avoid collisions when several components share a page.
+ */
+
+:root {
+  /* Typography */
+  --data-grid-font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --data-grid-color: inherit;
+
+  /* Colors */
+  --data-grid-background: transparent;
+  --data-grid-header-background: rgba(127, 127, 127, 0.08);
+  --data-grid-header-color: inherit;
+
+  /* Border */
+  --data-grid-border-color: #d0d0d5;
+  --data-grid-border-style: solid;
+  --data-grid-border-width: 1px;
+  --data-grid-border-radius: 8px;
+
+  /* Focus */
+  --data-grid-focus-color: #6366f1;
+
+  /* Spacing */
+  --data-grid-cell-padding: 0.75rem 1rem;
+}
