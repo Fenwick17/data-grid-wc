@@ -35,6 +35,22 @@ reader announces it as a text field.
 Pressing `Escape` while editing cancels the edit and returns the cell to its
 button state.
 
+### Data
+
+Pass rows through the `data` property. The `Person` type is exported for
+TypeScript consumers:
+
+```ts
+import type { Person } from 'web-components-library';
+
+const rows: Person[] = [
+  { firstName: 'Ada', lastName: 'Lovelace', age: 36, hairColour: 'Brown' },
+];
+
+const grid = document.querySelector('data-grid')!;
+grid.data = rows;
+```
+
 ## Development
 
 ```bash

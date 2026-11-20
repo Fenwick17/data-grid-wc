@@ -75,8 +75,9 @@
   color: var(--data-grid-header-color, inherit);
 }
 
-/* Keyboard focus ring on the active cell. */
-.cell:focus {
+/* Keyboard focus ring on the active cell and the editing input. */
+.cell:focus,
+.cell-input:focus {
   outline: 2px solid var(--data-grid-focus-color, #6366f1);
   outline-offset: -2px;
 }
@@ -122,9 +123,4 @@
   font: inherit;
   color: inherit;
   outline: none;
-}
-
-.cell-input:focus {
-  outline: 2px solid var(--data-grid-focus-color, #6366f1);
-  outline-offset: -2px;
 }

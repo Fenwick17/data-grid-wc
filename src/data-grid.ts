@@ -2,7 +2,7 @@ import { LitElement, html, unsafeCSS } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import styles from './data-grid.css?inline';
 
-interface Person {
+export interface Person {
   firstName: string;
   lastName: string;
   age: number;
@@ -223,33 +223,40 @@ export class DataGrid extends LitElement {
       return;
     }
 
-    const { row, col } = this.activeCell;
-    let nextRow = row;
-    let nextCol = col;
-
     switch (event.key) {
       case 'ArrowUp':
-        nextRow = Math.max(0, row - 1);
-        break;
+        event.preventDefault();
+        this.moveActiveCell(-1, 0);
+        return;
       case 'ArrowDown':
-        nextRow = Math.min(this.rowCount - 1, row + 1);
-        break;
+        event.preventDefault();
+        this.moveActiveCell(1, 0);
+        return;
       case 'ArrowLeft':
-        nextCol = Math.max(0, col - 1);
-        break;
+        event.preventDefault();
+        this.moveActiveCell(0, -1);
+        return;
       case 'ArrowRight':
-        nextCol = Math.min(COLUMNS.length - 1, col + 1);
-        break;
+        event.preventDefault();
+        this.moveActiveCell(0, 1);
+        return;
       case 'Enter':
         event.preventDefault();
         this.startEdit();
         return;
-      default:
-        return;
     }
+  }
 
-    event.preventDefault();
-    this.activeCell = { row: nextRow, col: nextCol };
+  private moveActiveCell(rowDelta: number, colDelta: number) {
+    const row = Math.max(
+      0,
+      Math.min(this.rowCount - 1, this.activeCell.row + rowDelta)
+    );
+    const col = Math.max(
+      0,
+      Math.min(COLUMNS.length - 1, this.activeCell.col + colDelta)
+    );
+    this.activeCell = { row, col };
     this.focusActiveCell();
   }
 
@@ -274,6 +281,7 @@ export class DataGrid extends LitElement {
     const { row, col } = this.activeCell;
     const column = COLUMNS[col];
     const rowIndex = row - 1;
+    // Only string-valued columns are editable today, so the cast is safe.
     this.data = this.data.map((person, i) =>
       i === rowIndex
         ? ({ ...person, [column.key]: this.editValue } as Person)
