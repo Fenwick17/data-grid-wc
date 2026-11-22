@@ -6,9 +6,14 @@ import terser from '@rollup/plugin-terser';
 
 const input = 'src/index.ts';
 
-// `lit` is kept external in the ESM build so bundler consumers can dedupe it.
-// It is bundled into the UMD build so the component works from a plain <script> tag.
-const isLit = (id) => id === 'lit' || id.startsWith('lit/');
+// Runtime dependencies are kept external in the ESM build so bundler
+// consumers can dedupe them. They are bundled into the UMD build so the
+// component works from a plain <script> tag.
+const isExternal = (id) =>
+  id === 'lit' ||
+  id.startsWith('lit/') ||
+  id === '@floating-ui/dom' ||
+  id === 'sortablejs';
 
 const INLINE_CSS_QUERY = '?inline';
 
@@ -65,7 +70,7 @@ const plugins = () => [
 export default [
   {
     input,
-    external: isLit,
+    external: isExternal,
     plugins: [...plugins(), emitTheme()],
     output: {
       file: 'dist/index.js',

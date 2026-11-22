@@ -32,6 +32,16 @@
   /* Focus */
   --data-grid-focus-color: #6366f1;
 
+  /* Editor */
+  --data-grid-editor-background: Canvas;
+
   /* Spacing */
   --data-grid-cell-padding: 0.75rem 1rem;
+  --data-grid-cell-min-width: 8rem;
+  --data-grid-select-column-width: 5rem;
+  --data-grid-actions-column-width: 6rem;
+
+  /* Drag handle */
+  --data-grid-handle-column-width: 2.5rem;
+  --data-grid-handle-color: #888;
 }

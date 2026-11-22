@@ -13,14 +13,25 @@
  *   data-grid::part(grid)
  *   data-grid::part(header)
  *   data-grid::part(header-cell)
+ *   data-grid::part(rows)
  *   data-grid::part(row)
  *   data-grid::part(cell)
+ *   data-grid::part(handle)
  *   data-grid::part(cell-button)
+ *   data-grid::part(checkbox)
  *   data-grid::part(input)
+ *   data-grid::part(textarea)
+ *   data-grid::part(menu-button)
+ *   data-grid::part(menu)
+ *   data-grid::part(menu-item)
+ *   data-grid::part(combobox)
+ *   data-grid::part(combobox-option)
  */
 
 :host {
   display: block;
+  min-width: 0;
+  max-width: 100%;
   font-family: var(
     --data-grid-font-family,
     system-ui,
@@ -35,15 +46,26 @@
 .grid {
   display: flex;
   flex-direction: column;
+  max-width: 100%;
+  overflow-x: auto;
   border: var(--data-grid-border-width, 1px)
     var(--data-grid-border-style, solid)
     var(--data-grid-border-color, #d0d0d5);
   border-radius: var(--data-grid-border-radius, 8px);
-  overflow: hidden;
+  background: var(--data-grid-background, transparent);
 }
 
 .row {
   display: flex;
+}
+
+/*
+ * Wrapper for the data rows. SortableJS targets this element so the header row
+ * is never draggable.
+ */
+.rows {
+  display: flex;
+  flex-direction: column;
 }
 
 .cell {
@@ -55,8 +77,28 @@
   text-align: left;
 }
 
+/*
+ * Data columns keep a minimum width so the grid scrolls horizontally instead
+ * of squashing them. The selection and actions columns keep their fixed widths.
+ */
+.cell--data {
+  min-width: var(--data-grid-cell-min-width, 8rem);
+}
+
+/* Lift the editing cell above the next row so its editor can overflow. */
+.cell--editing {
+  z-index: 1;
+}
+
 /* Horizontal separators. */
 .row + .row .cell {
+  border-top: var(--data-grid-border-width, 1px)
+    var(--data-grid-border-style, solid)
+    var(--data-grid-border-color, #d0d0d5);
+}
+
+/* The first data row no longer follows the header row as a sibling. */
+.rows .row:first-child .cell {
   border-top: var(--data-grid-border-width, 1px)
     var(--data-grid-border-style, solid)
     var(--data-grid-border-color, #d0d0d5);
@@ -73,6 +115,15 @@
   font-weight: 600;
   background: var(--data-grid-header-background, rgba(127, 127, 127, 0.08));
   color: var(--data-grid-header-color, inherit);
+}
+
+/* Round the header corners now that the grid no longer clips its children. */
+.row--header .cell:first-child {
+  border-top-left-radius: var(--data-grid-border-radius, 8px);
+}
+
+.row--header .cell:last-child {
+  border-top-right-radius: var(--data-grid-border-radius, 8px);
 }
 
 /* Keyboard focus ring on the active cell and the editing input. */
@@ -103,6 +154,132 @@
   outline: none;
 }
 
+/* Drag-handle column: fixed width, centered handle. */
+.cell--handle {
+  flex: 0 0 var(--data-grid-handle-column-width, 2.5rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.cell-handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: var(--data-grid-handle-color, #888);
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: grab;
+  user-select: none;
+}
+
+.cell-handle:active {
+  cursor: grabbing;
+}
+
+/* SortableJS drag states. */
+.row-ghost {
+  opacity: 0.4;
+}
+
+.row-chosen {
+  background: var(--data-grid-header-background, rgba(127, 127, 127, 0.08));
+}
+
+.row-drag {
+  opacity: 0.8;
+}
+
+/* Selection column: sized to its content, not stretched like data columns. */
+.cell--select {
+  flex: 0 0 var(--data-grid-select-column-width, 5rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Row selection checkbox. */
+.cell-checkbox {
+  width: 28px;
+  height: 28px;
+  margin: 0;
+  cursor: pointer;
+}
+
+/* Actions column: fixed width like the selection column. */
+.cell--actions {
+  flex: 0 0 var(--data-grid-actions-column-width, 6rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cell-menu-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.cell-menu-button:focus-visible {
+  outline: 2px solid var(--data-grid-focus-color, #6366f1);
+  outline-offset: -2px;
+}
+
+/*
+ * Floating menu. Positioned by Floating UI with the `fixed` strategy so it
+ * escapes any clipping ancestor. Starts transparent until positioned.
+ */
+.cell-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  min-width: 10rem;
+  padding: 0.25rem;
+  border: 1px solid var(--data-grid-border-color, #d0d0d5);
+  border-radius: 6px;
+  background: var(--data-grid-editor-background, Canvas);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+}
+
+.cell-menu-item {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.cell-menu-item:hover,
+.cell-menu-item:focus-visible {
+  background: var(--data-grid-header-background, rgba(127, 127, 127, 0.08));
+  outline: none;
+}
+
+.cell-menu-item:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
 /*
  * Invisible placeholder keeps the cell's height stable while editing. The
  * absolutely positioned input sits on top of it.
@@ -123,4 +300,63 @@
   font: inherit;
   color: inherit;
   outline: none;
+}
+
+/*
+ * Multi-line editor. Positioned by Floating UI with the `fixed` strategy so it
+ * floats above the grid and escapes the grid's scroll container. The width is
+ * set from the cell on open; `resize: both` lets the user drag it larger.
+ */
+.cell-textarea {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  min-height: 6rem;
+  max-height: none;
+  box-sizing: border-box;
+  padding: var(--data-grid-cell-padding, 0.75rem 1rem);
+  border: 1px solid var(--data-grid-focus-color, #6366f1);
+  border-radius: 4px;
+  background: var(--data-grid-editor-background, Canvas);
+  color: inherit;
+  font: inherit;
+  resize: both;
+  outline: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+}
+
+/*
+ * Combobox listbox. Positioned by Floating UI with the `fixed` strategy so it
+ * escapes any clipping ancestor. Starts transparent until positioned.
+ */
+.cell-combobox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  min-width: 10rem;
+  max-height: 12rem;
+  overflow-y: auto;
+  padding: 0.25rem;
+  border: 1px solid var(--data-grid-border-color, #d0d0d5);
+  border-radius: 6px;
+  background: var(--data-grid-editor-background, Canvas);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+}
+
+.cell-combobox-option {
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.cell-combobox-option[data-active='true'] {
+  background: var(--data-grid-header-background, rgba(127, 127, 127, 0.08));
+}
+
+.cell-combobox-option[aria-selected='true'] {
+  font-weight: 600;
 }

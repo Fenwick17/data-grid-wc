@@ -1,2 +1,2 @@
 export { DataGrid } from './data-grid';
-export type { Person } from './data-grid';
+export type { JobStatus, Person } from './data-grid';
